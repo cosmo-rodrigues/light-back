@@ -1,7 +1,8 @@
 import { serverEnv } from '@/env';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { uuid } from 'uuidv4';
 
-export async function uploadToS3(file: string) {
+export async function uploadToS3(file: string, billNumber: number) {
   try {
     const s3Client = new S3Client({
       region: serverEnv.AWS_REGION,
@@ -12,9 +13,10 @@ export async function uploadToS3(file: string) {
     });
 
     const command = new PutObjectCommand({
+      Body: file,
       Bucket: serverEnv.AWS_S3_BUCKET_NAME,
       ContentType: 'application/pdf',
-      Key: file,
+      Key: `${uuid()}-conta-${billNumber}`,
     });
 
     const uploadResponse = await s3Client.send(command);
