@@ -4,6 +4,8 @@ import { z } from 'zod';
 const envSchema = z.object({
   NODE_ENV: z.enum(['dev', 'test', 'production']).default('dev'),
   PORT: z.coerce.number().default(3000),
+  FILE_MAX_SIZE: z.coerce.number().default(500000),
+  FILE_MAX_AMOUNT: z.coerce.number().default(12),
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
   DB_HOST: z.string(),

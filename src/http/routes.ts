@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { pdfUpload } from './controllers/contas';
+import { pdfUpload } from './controllers/fatura';
 
 export async function appRoutes(app: FastifyInstance) {
-  app.post('/contas', pdfUpload);
+  app.post('/fatura', pdfUpload);
 }

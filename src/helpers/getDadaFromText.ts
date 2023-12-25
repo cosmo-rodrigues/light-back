@@ -1,19 +1,51 @@
+type ElectricalCostsOptions =
+  | 'energiaEletricaEmKWh'
+  | 'energiaSCEESemICMSEmKWh'
+  | 'energiaCompensadaGDIEmKWh';
+
 const dadosDaConta = {
-  numeroDoCliente: '',
-  numeroDaInstalacao: '',
-  nomeDoCliente: '',
-  endereco: {
-    rua: '',
-    numero: '',
-    complemento: '',
-    bairro: '',
-    cidade: '',
-    cep: '',
-    estado: '',
-  },
-  dataEmissao: '',
-  linkParaConsulta: '',
   chaveDeAcesso: '',
+  dataDoVencimento: '',
+  dataEmissao: '',
+  datasDeLeitura: {
+    anterior: '',
+    atual: '',
+    proxima: '',
+  },
+  diasUtilizando: '',
+  energiaCompensadaGDIEmKWh: {
+    quantidade: '',
+    precoUnitario: '',
+    tarifaUnitaria: '',
+    valorTotal: '',
+  },
+  energiaEletricaEmKWh: {
+    quantidade: '',
+    precoUnitario: '',
+    tarifaUnitaria: '',
+    valorTotal: '',
+  },
+  energiaSCEESemICMSEmKWh: {
+    quantidade: '',
+    precoUnitario: '',
+    tarifaUnitaria: '',
+    valorTotal: '',
+  },
+  endereco: {
+    bairro: '',
+    cep: '',
+    cidade: '',
+    complemento: '',
+    estado: '',
+    numero: '',
+    rua: '',
+  },
+  faturaReferenteA: '',
+  linkParaConsulta: '',
+  nomeDoCliente: '',
+  numeroDaInstalacao: '',
+  numeroDoCliente: '',
+  valorTotalDaFatura: '',
 };
 
 function standardizeText(text: string) {
@@ -74,6 +106,42 @@ function getClientInformation(text: string, arrayOfTexts: string[], i: number) {
   }
 }
 
+function parseElectricalCostByType(
+  type: ElectricalCostsOptions,
+  arrayOfTexts: string[],
+  i: number
+) {
+  const [quantidade, precoUnitario, valorTotal, tarifaUnitaria] = arrayOfTexts[
+    i
+  ]
+    .split(' ')
+    .filter((el) => el !== '')
+    .slice(-4);
+
+  dadosDaConta[type].quantidade = quantidade;
+  dadosDaConta[type].precoUnitario = precoUnitario;
+  dadosDaConta[type].valorTotal = valorTotal;
+  dadosDaConta[type].tarifaUnitaria = tarifaUnitaria;
+}
+
+function getElectricalCostsByType(
+  text: string,
+  arrayOfTexts: string[],
+  i: number
+) {
+  if (text?.includes('energiaelétricakwh')) {
+    parseElectricalCostByType('energiaEletricaEmKWh', arrayOfTexts, i);
+  }
+
+  if (text?.includes('energiascees/icmskwh')) {
+    parseElectricalCostByType('energiaSCEESemICMSEmKWh', arrayOfTexts, i);
+  }
+
+  if (text?.includes('energiacompensadagdikwh')) {
+    parseElectricalCostByType('energiaCompensadaGDIEmKWh', arrayOfTexts, i);
+  }
+}
+
 function getEmissionDate(text: string) {
   if (text?.includes('datadeemissão:')) {
     const dataEmissao = text?.split(':')[1];
@@ -81,16 +149,58 @@ function getEmissionDate(text: string) {
     dadosDaConta.dataEmissao = dataEmissao;
   }
 }
-function textIterator(texto: string[]) {
-  for (let i = 0; i <= texto.length; i++) {
-    const standardText = standardizeText(texto[i]);
 
-    getClientInformation(standardText, texto, i);
+function getDateAndValue(text: string, arrayOfTexts: string[], i: number) {
+  if (text?.includes('referenteavencimento')) {
+    const [faturaReferenteA, dataDoVencimento, valorTotalDaFatura] =
+      arrayOfTexts[i + 1].split(' ').filter((el) => el !== '');
+
+    dadosDaConta.dataDoVencimento = dataDoVencimento;
+    dadosDaConta.faturaReferenteA = faturaReferenteA;
+    dadosDaConta.valorTotalDaFatura = valorTotalDaFatura;
+  }
+}
+
+function getReferenceDate(text: string, arrayOfTexts: string[], i: number) {
+  if (text?.includes('atualnºdediaspróxima')) {
+    const [tipoEDatas, diasEDatas] = arrayOfTexts[i + 1].split(' ');
+    const datas = tipoEDatas.split('fásico')[1];
+    dadosDaConta.datasDeLeitura.anterior = datas.substring(0, 5);
+    dadosDaConta.datasDeLeitura.atual = datas.substring(5, 10);
+    dadosDaConta.datasDeLeitura.proxima = diasEDatas.substring(2, 7);
+    dadosDaConta.diasUtilizando = diasEDatas.substring(0, 2);
+  }
+}
+
+function textIterator(arrayOfTexts: string[]) {
+  for (let i = 0; i <= arrayOfTexts.length; i++) {
+    const standardText = standardizeText(arrayOfTexts[i]);
+
+    getClientInformation(standardText, arrayOfTexts, i);
+    getElectricalCostsByType(standardText, arrayOfTexts, i);
     getEmissionDate(standardText);
+    getDateAndValue(standardText, arrayOfTexts, i);
+    getReferenceDate(standardText, arrayOfTexts, i);
+  }
+}
+
+function validateBillOrigin(arrayOfTexts: string[]) {
+  const contaCemig = arrayOfTexts.find((text) =>
+    standardizeText(text).includes(
+      'cemigdistribuiçãos.a.cnpj06.981.180/0001-16'
+    )
+  );
+
+  if (!contaCemig) {
+    throw new Error(
+      'Fatura de origem desconhecida. Verifique o documento enviado'
+    );
   }
 }
 export async function getDataFromText(pdfToString: string) {
   const arrayOfTexts = pdfToString.split('\n').filter((item) => item !== '');
+
+  validateBillOrigin(arrayOfTexts);
   textIterator(arrayOfTexts);
 
   return dadosDaConta;
