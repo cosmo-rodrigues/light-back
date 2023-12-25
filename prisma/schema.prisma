@@ -41,64 +41,71 @@ enum State {
 }
 
 model Cliente {
-  id         Int          @id @unique @default(autoincrement())
-  nome       String
-  endereco   Endereco[]
-  instalacao Instalacao[]
+  id              Int          @id @unique @default(autoincrement())
+  nome            String
+  numeroDoCliente String
+  endereco        Endereco[]
+  instalacao      Instalacao[]
 
   @@map("clientes")
 }
 
 model Endereco {
-  id         Int          @id @unique @default(autoincrement())
-  endereco   String
-  numero     Int?
-  semNumero  Boolean      @default(true) @map("sem_numero")
-  bairro     String
-  cidade     String
-  estado     State
-  cliente    Cliente?     @relation(fields: [clienteId], references: [id])
-  clienteId  Int?         @map("cliente_id")
-  instalacao Instalacao[]
-  conta      Conta[]
+  id          Int          @id @unique @default(autoincrement())
+  endereco    String
+  numero      String?
+  semNumero   Boolean      @default(true) @map("sem_numero")
+  complemento String?
+  bairro      String
+  cidade      String
+  estado      State
+  cep         String?
+  cliente     Cliente?     @relation(fields: [clienteId], references: [id])
+  clienteId   Int?         @map("cliente_id")
+  instalacao  Instalacao[]
+  fatura      Fatura[]
 
   @@map("enderecos")
 }
 
 model Instalacao {
-  id         Int       @id @unique @default(autoincrement())
-  cliente    Cliente   @relation(fields: [clienteId], references: [id])
-  clienteId  Int       @map("cliente_id")
-  endereco   Endereco? @relation(fields: [enderecoId], references: [id])
-  enderecoId Int?      @map("endereco_id")
-  Conta      Conta[]
+  id                 Int       @id @unique @default(autoincrement())
+  numeroDaInstalacao String
+  cliente            Cliente   @relation(fields: [clienteId], references: [id])
+  clienteId          Int       @map("cliente_id")
+  endereco           Endereco? @relation(fields: [enderecoId], references: [id])
+  enderecoId         Int?      @map("endereco_id")
+  fatura             Fatura[]
 
   @@map("instalacoes")
 }
 
-model Conta {
-  id                                Int        @id @unique @default(autoincrement())
-  endereco                          Endereco   @relation(fields: [enderecoId], references: [id])
-  enderecoId                        Int        @map("endereco_id")
-  instalacao                        Instalacao @relation(fields: [instalacaoId], references: [id])
-  instalacaoId                      Int
-  dataDaEmissao                     DateTime   @map("data_da_emissao")
-  dataDoVencimento                  DateTime   @map("data_do_vencimento")
-  dataDaLeituraAnterior             DateTime   @default(now()) @map("data_da_leitura_anterior")
-  dataDaLeituraAtual                DateTime   @default(now()) @map("data_da_leitura_atual")
-  dataDaProximaLeitura              DateTime   @default(dbgenerated("now() + interval '1 month'")) @map("data_da_proxima_leitura")
-  energiaEletricaEmKWh              Int        @default(0) @map("energia_eletrica_em_KWh")
-  energiaEletricaConsumoTotal       Int        @default(0) @map("energia_eletrica_consumo_total")
-  energiaEletricaValorUnitario      Float      @default(0) @map("energia_eletrica_valor_unitario")
-  energiaEletricaValorTotal         Float      @default(0) @map("energia_eletrica_valor_total")
-  energiaSCEESemICMSEmKWh           Int        @default(0) @map("energia_SCEE_sem_ICMS_em_KWh")
-  energiaSCEESemICMSConsumoTotal    Int        @default(0) @map("energia_SCEE_sem_ICMS_consumo_total")
-  energiaSCEESemICMSValorUnitario   Float      @default(0) @map("energia_SCEE_sem_ICMS_valor_unitario")
-  energiaSCEESemICMSValorTotal      Float      @default(0) @map("energia_SCEE_sem_ICMS_valor_total")
-  energiaCompensadaGDIEmKWh         Int        @default(0) @map("energia_compensada_GDI_em_KWh")
-  energiaCompensadaGDIGerada        Int        @default(0) @map("energia_compensada_GDI_gerada")
-  energiaCompensadaGDIValorUnitario Float      @default(0) @map("energia_compensada_GDI_valor_unitario")
-  energiaCompensadaGDIValorTotal    Float      @default(0) @map("energia_compensada_GDI_valor_total")
+model Fatura {
+  id                                 Int        @id @unique @default(autoincrement())
+  endereco                           Endereco   @relation(fields: [enderecoId], references: [id])
+  enderecoId                         Int        @map("endereco_id")
+  instalacao                         Instalacao @relation(fields: [instalacaoId], references: [id])
+  instalacaoId                       Int        @map("instalacao_id")
+  dataDaEmissao                      DateTime   @map("data_da_emissao")
+  dataDoVencimento                   DateTime   @map("data_do_vencimento")
+  faturaPaga                         Boolean?   @map("fatura_paga")
+  dataDoPagamento                    DateTime   @map("data_do_pagamento")
+  dataDaLeituraAnterior              DateTime   @default(now()) @map("data_da_leitura_anterior")
+  dataDaLeituraAtual                 DateTime   @default(now()) @map("data_da_leitura_atual")
+  dataDaProximaLeitura               DateTime   @default(dbgenerated("now() + interval '1 month'")) @map("data_da_proxima_leitura")
+  energiaEletricaQuantidade          String     @map("energia_eletrica_quantidade")
+  energiaEletricaPrecoUnitario       String     @map("energia_eletrica_preco_unitario")
+  energiaEletricaValorTotal          String     @map("energia_eletrica_valor_total")
+  energiaEletricaTarifaUnitaria      String     @map("energia_eletrica_tarifa_unitaria")
+  energiaSCEESemICMSQuantidade       String     @map("energia_SCEE_sem_ICMS_quantidade")
+  energiaSCEESemICMSPrecoUnitario    String     @map("energia_SCEE_sem_ICMS_preco_unitario")
+  energiaSCEESemICMSValorTotal       String     @map("energia_SCEE_sem_ICMS_valor_total")
+  energiaSCEESemICMSTarifaUnitaria   String     @map("energia_SCEE_sem_ICMS_tarifa_unitaria")
+  energiaCompensadaGDIQuantidade     String     @map("energia_compensada_GDI_quantidade")
+  energiaCompensadaGDIPrecoUnitario  String     @map("energia_compensada_GDI_preco_unitario")
+  energiaCompensadaGDIValorTotal     String     @map("energia_compensada_GDI_valor_total")
+  energiaCompensadaGDITarifaUnitaria String     @map("energia_compensada_GDI_tarifa_unitaria")
+  valorASerPago                      String     @map("valor_a_ser_pago")
 
-  @@map("contas")
+  @@map("faturas")
 }
