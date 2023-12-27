@@ -137,6 +137,28 @@ function getNumberOfNF(text: string, arrayOfTexts: string[], i: number) {
   }
 }
 
+function getPublicIlluminationContribution(
+  text: string,
+  arrayOfTexts: string[],
+  i: number
+) {
+  if (text?.includes('contribilumpublica')) {
+    dadosDaFatura.contribuicaoIlumicaoPublica = arrayOfTexts[i]
+      .split(' ')
+      .filter((el) => el != '')
+      .slice(-1)[0];
+  }
+}
+
+function getItaipuBonus(text: string, arrayOfTexts: string[], i: number) {
+  if (text?.includes('bônusitaipu')) {
+    dadosDaFatura.bonusItaipu = arrayOfTexts[i]
+      .split(' ')
+      .filter((el) => el != '')
+      .slice(-1)[0];
+  }
+}
+
 function textIterator(arrayOfTexts: string[]) {
   for (let i = 0; i <= arrayOfTexts.length; i++) {
     const standardText = standardizeText(arrayOfTexts[i]);
@@ -148,6 +170,8 @@ function textIterator(arrayOfTexts: string[]) {
     getDateAndValue(standardText, arrayOfTexts, i);
     getReferenceDate(standardText, arrayOfTexts, i);
     getNumberOfNF(standardText, arrayOfTexts, i);
+    getPublicIlluminationContribution(standardText, arrayOfTexts, i);
+    getItaipuBonus(standardText, arrayOfTexts, i);
   }
 }
 

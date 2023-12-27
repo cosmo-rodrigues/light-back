@@ -9,7 +9,7 @@ export interface FaturaRepository {
     userNumber: string
   ): Promise<FaturaCreateInput[] | null>;
 
-  getFaturaByDate(date: string): Promise<FaturaCreateInput | null>;
+  getFaturaByDate(date: Date): Promise<FaturaCreateInput | null>;
 
   getFaturaByNF(numeroNF: string): Promise<FaturaCreateInput | null>;
 }

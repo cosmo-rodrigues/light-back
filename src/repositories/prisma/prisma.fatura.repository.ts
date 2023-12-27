@@ -21,7 +21,7 @@ class PrismaFaturaRepository implements FaturaRepository {
 
     return faturas;
   }
-  async getFaturaByDate(date: string) {
+  async getFaturaByDate(date: Date) {
     const faturas = await prisma.fatura.findFirst({
       where: {
         dataEmissao: date,

@@ -1,6 +1,11 @@
+import { stringToDateTime } from './stringToDateTime';
+import { stringToFloat, stringToInteger } from './stringToNumber';
+
 export const dadosDaFatura = {
   awsStorageObjectKey: '',
+  bonusItaipu: '',
   chaveDeAcesso: '',
+  contribuicaoIlumicaoPublica: '',
   dataDoVencimento: '',
   dataEmissao: '',
   datasDeLeitura: {
@@ -50,27 +55,53 @@ type DadosDaFatura = typeof dadosDaFatura;
 export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
   return {
     awsStorageObjectKey,
+    bonusItaipu: stringToFloat(data.bonusItaipu),
     chaveDeAcesso: data.chaveDeAcesso,
-    dataDoVencimento: data.dataDoVencimento,
-    dataEmissao: data.dataEmissao,
-    datasDeLeituraAnterior: data.datasDeLeitura.anterior,
-    datasDeLeituraAtual: data.datasDeLeitura.atual,
-    datasDeLeituraProxima: data.datasDeLeitura.proxima,
-    diasUtilizando: data.diasUtilizando,
-    energiaCompensadaquantidade: data.energiaCompensadaGDIEmKWh.quantidade,
-    energiaCompensadaprecoUnitario:
-      data.energiaCompensadaGDIEmKWh.precoUnitario,
-    energiaCompensadatarifaUnitaria:
-      data.energiaCompensadaGDIEmKWh.tarifaUnitaria,
-    energiaCompensadavalorTotal: data.energiaCompensadaGDIEmKWh.valorTotal,
-    energiaEletricaquantidade: data.energiaEletricaEmKWh.quantidade,
-    energiaEletricaprecoUnitario: data.energiaEletricaEmKWh.precoUnitario,
-    energiaEletricatarifaUnitaria: data.energiaEletricaEmKWh.tarifaUnitaria,
-    energiaEletricavalorTotal: data.energiaEletricaEmKWh.valorTotal,
-    energiaSCEEquantidade: data.energiaSCEESemICMSEmKWh.quantidade,
-    energiaSCEEprecoUnitario: data.energiaSCEESemICMSEmKWh.precoUnitario,
-    energiaSCEEtarifaUnitaria: data.energiaSCEESemICMSEmKWh.tarifaUnitaria,
-    energiaSCEEvalorTotal: data.energiaSCEESemICMSEmKWh.valorTotal,
+    contribuicaoIlumicaoPublica: stringToFloat(
+      data.contribuicaoIlumicaoPublica
+    ),
+    dataDoVencimento: stringToDateTime(data.dataDoVencimento),
+    dataEmissao: stringToDateTime(data.dataEmissao),
+    datasDeLeituraAnterior: stringToDateTime(data.datasDeLeitura.anterior),
+    datasDeLeituraAtual: stringToDateTime(data.datasDeLeitura.atual),
+    datasDeLeituraProxima: stringToDateTime(data.datasDeLeitura.proxima),
+    diasUtilizando: stringToInteger(data.diasUtilizando),
+    energiaCompensadaQuantidade: stringToInteger(
+      data.energiaCompensadaGDIEmKWh.quantidade
+    ),
+    energiaCompensadaPrecoUnitario: stringToFloat(
+      data.energiaCompensadaGDIEmKWh.precoUnitario
+    ),
+    energiaCompensadaTarifaUnitaria: stringToFloat(
+      data.energiaCompensadaGDIEmKWh.tarifaUnitaria
+    ),
+    energiaCompensadaValorTotal: stringToFloat(
+      data.energiaCompensadaGDIEmKWh.valorTotal
+    ),
+    energiaEletricaQuantidade: stringToInteger(
+      data.energiaEletricaEmKWh.quantidade
+    ),
+    energiaEletricaPrecoUnitario: stringToFloat(
+      data.energiaEletricaEmKWh.precoUnitario
+    ),
+    energiaEletricaTarifaUnitaria: stringToFloat(
+      data.energiaEletricaEmKWh.tarifaUnitaria
+    ),
+    energiaEletricaValorTotal: stringToFloat(
+      data.energiaEletricaEmKWh.valorTotal
+    ),
+    energiaSCEEQuantidade: stringToInteger(
+      data.energiaSCEESemICMSEmKWh.quantidade
+    ),
+    energiaSCEEPrecoUnitario: stringToFloat(
+      data.energiaSCEESemICMSEmKWh.precoUnitario
+    ),
+    energiaSCEETarifaUnitaria: stringToFloat(
+      data.energiaSCEESemICMSEmKWh.tarifaUnitaria
+    ),
+    energiaSCEEValorTotal: stringToFloat(
+      data.energiaSCEESemICMSEmKWh.valorTotal
+    ),
     bairro: data.endereco.bairro,
     cep: data.endereco.cep,
     cidade: data.endereco.cidade,
@@ -78,12 +109,12 @@ export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
     estado: data.endereco.estado,
     numero: data.endereco.numero,
     rua: data.endereco.rua,
-    faturaReferenteA: data.faturaReferenteA,
+    faturaReferenteA: stringToDateTime(data.faturaReferenteA),
     linkParaConsulta: data.linkParaConsulta,
     nomeDoCliente: data.nomeDoCliente,
     numeroDaInstalacao: data.numeroDaInstalacao,
     numeroDaNotaNF: data.numeroDaNotaNF,
     numeroDoCliente: data.numeroDoCliente,
-    valorTotalDaFatura: data.valorTotalDaFatura,
+    valorTotalDaFatura: stringToFloat(data.valorTotalDaFatura),
   };
 }
