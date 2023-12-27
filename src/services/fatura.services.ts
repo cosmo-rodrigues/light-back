@@ -62,7 +62,7 @@ class FaturaServices {
       notaSalva.awsStorageObjectKey as string
     );
 
-    return faturaPdfLink;
+    return faturaPdfLink?.split('?')[0];
   }
 
   async remove() {}
