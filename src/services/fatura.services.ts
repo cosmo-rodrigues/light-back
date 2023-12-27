@@ -31,9 +31,9 @@ class FaturaServices {
         dataFromPdf.numeroDaNotaNF
       );
 
-      const createdFatura = await prismaFaturaRepository.create(
-        dataParser(dataFromPdf, awsStorageObjectKey)
-      );
+      const finalData = dataParser(dataFromPdf, awsStorageObjectKey);
+
+      const createdFatura = await prismaFaturaRepository.create(finalData);
 
       faturasParsed.push(createdFatura);
     }
