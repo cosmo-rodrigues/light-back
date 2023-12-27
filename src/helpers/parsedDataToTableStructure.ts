@@ -66,17 +66,17 @@ export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
     datasDeLeituraAtual: stringToDateTime(data.datasDeLeitura.atual),
     datasDeLeituraProxima: stringToDateTime(data.datasDeLeitura.proxima),
     diasUtilizando: stringToInteger(data.diasUtilizando),
-    energiaCompensadaQuantidade: stringToInteger(
-      data.energiaCompensadaGDIEmKWh.quantidade
-    ),
+    energiaCompensadaQuantidade:
+      stringToInteger(data.energiaCompensadaGDIEmKWh.quantidade) || 0,
     energiaCompensadaPrecoUnitario:
       stringToFloat(data.energiaCompensadaGDIEmKWh.precoUnitario) || 0,
     energiaCompensadaTarifaUnitaria:
       stringToFloat(data.energiaCompensadaGDIEmKWh.tarifaUnitaria) || 0,
     energiaCompensadaValorTotal:
       stringToFloat(data.energiaCompensadaGDIEmKWh.valorTotal) || 0,
-    energiaEletricaQuantidade:
-      stringToInteger(data.energiaEletricaEmKWh.quantidade) || 0,
+    energiaEletricaQuantidade: stringToInteger(
+      data.energiaEletricaEmKWh.quantidade
+    ),
     energiaEletricaPrecoUnitario: stringToFloat(
       data.energiaEletricaEmKWh.precoUnitario
     ),
