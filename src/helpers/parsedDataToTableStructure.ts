@@ -55,7 +55,7 @@ type DadosDaFatura = typeof dadosDaFatura;
 export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
   return {
     awsStorageObjectKey,
-    bonusItaipu: stringToFloat(data.bonusItaipu),
+    bonusItaipu: stringToFloat(data.bonusItaipu) || 0,
     chaveDeAcesso: data.chaveDeAcesso,
     contribuicaoIlumicaoPublica: stringToFloat(
       data.contribuicaoIlumicaoPublica
@@ -69,18 +69,14 @@ export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
     energiaCompensadaQuantidade: stringToInteger(
       data.energiaCompensadaGDIEmKWh.quantidade
     ),
-    energiaCompensadaPrecoUnitario: stringToFloat(
-      data.energiaCompensadaGDIEmKWh.precoUnitario
-    ),
-    energiaCompensadaTarifaUnitaria: stringToFloat(
-      data.energiaCompensadaGDIEmKWh.tarifaUnitaria
-    ),
-    energiaCompensadaValorTotal: stringToFloat(
-      data.energiaCompensadaGDIEmKWh.valorTotal
-    ),
-    energiaEletricaQuantidade: stringToInteger(
-      data.energiaEletricaEmKWh.quantidade
-    ),
+    energiaCompensadaPrecoUnitario:
+      stringToFloat(data.energiaCompensadaGDIEmKWh.precoUnitario) || 0,
+    energiaCompensadaTarifaUnitaria:
+      stringToFloat(data.energiaCompensadaGDIEmKWh.tarifaUnitaria) || 0,
+    energiaCompensadaValorTotal:
+      stringToFloat(data.energiaCompensadaGDIEmKWh.valorTotal) || 0,
+    energiaEletricaQuantidade:
+      stringToInteger(data.energiaEletricaEmKWh.quantidade) || 0,
     energiaEletricaPrecoUnitario: stringToFloat(
       data.energiaEletricaEmKWh.precoUnitario
     ),
