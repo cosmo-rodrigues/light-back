@@ -43,7 +43,8 @@ enum State {
 model Cliente {
   id              Int          @id @unique @default(autoincrement())
   nome            String
-  numeroDoCliente String
+  numeroDoCliente String       @map("numero_do_cliente")
+  cliente         Fatura[]
   endereco        Endereco[]
   instalacao      Instalacao[]
 
@@ -70,7 +71,7 @@ model Endereco {
 
 model Instalacao {
   id                 Int       @id @unique @default(autoincrement())
-  numeroDaInstalacao String
+  numeroDaInstalacao String    @map("numero_da_instalacao")
   cliente            Cliente   @relation(fields: [clienteId], references: [id])
   clienteId          Int       @map("cliente_id")
   endereco           Endereco? @relation(fields: [enderecoId], references: [id])
@@ -81,31 +82,47 @@ model Instalacao {
 }
 
 model Fatura {
-  id                                 Int        @id @unique @default(autoincrement())
-  endereco                           Endereco   @relation(fields: [enderecoId], references: [id])
-  enderecoId                         Int        @map("endereco_id")
-  instalacao                         Instalacao @relation(fields: [instalacaoId], references: [id])
-  instalacaoId                       Int        @map("instalacao_id")
-  dataDaEmissao                      DateTime   @map("data_da_emissao")
-  dataDoVencimento                   DateTime   @map("data_do_vencimento")
-  faturaPaga                         Boolean?   @map("fatura_paga")
-  dataDoPagamento                    DateTime   @map("data_do_pagamento")
-  dataDaLeituraAnterior              DateTime   @default(now()) @map("data_da_leitura_anterior")
-  dataDaLeituraAtual                 DateTime   @default(now()) @map("data_da_leitura_atual")
-  dataDaProximaLeitura               DateTime   @default(dbgenerated("now() + interval '1 month'")) @map("data_da_proxima_leitura")
-  energiaEletricaQuantidade          String     @map("energia_eletrica_quantidade")
-  energiaEletricaPrecoUnitario       String     @map("energia_eletrica_preco_unitario")
-  energiaEletricaValorTotal          String     @map("energia_eletrica_valor_total")
-  energiaEletricaTarifaUnitaria      String     @map("energia_eletrica_tarifa_unitaria")
-  energiaSCEESemICMSQuantidade       String     @map("energia_SCEE_sem_ICMS_quantidade")
-  energiaSCEESemICMSPrecoUnitario    String     @map("energia_SCEE_sem_ICMS_preco_unitario")
-  energiaSCEESemICMSValorTotal       String     @map("energia_SCEE_sem_ICMS_valor_total")
-  energiaSCEESemICMSTarifaUnitaria   String     @map("energia_SCEE_sem_ICMS_tarifa_unitaria")
-  energiaCompensadaGDIQuantidade     String     @map("energia_compensada_GDI_quantidade")
-  energiaCompensadaGDIPrecoUnitario  String     @map("energia_compensada_GDI_preco_unitario")
-  energiaCompensadaGDIValorTotal     String     @map("energia_compensada_GDI_valor_total")
-  energiaCompensadaGDITarifaUnitaria String     @map("energia_compensada_GDI_tarifa_unitaria")
-  valorASerPago                      String     @map("valor_a_ser_pago")
+  id                              Int         @unique @default(autoincrement())
+  chaveDeAcesso                   String      @unique @map("chave_de_acesso")
+  dataDoVencimento                String      @map("data_do_vencimento")
+  dataEmissao                     String      @map("data_emissao")
+  datasDeLeituraAnterior          String      @map("datas_de_leitura_anterior")
+  datasDeLeituraAtual             String      @map("datas_de_leitura_atual")
+  datasDeLeituraProxima           String      @map("datas_de_leitura_proxima")
+  diasUtilizando                  String      @map("dias_utilizando")
+  energiaCompensadaquantidade     String      @map("energia_compensada_quantidade")
+  energiaCompensadaprecoUnitario  String      @map("energia_compensada_preco_unitario")
+  energiaCompensadatarifaUnitaria String      @map("energia_compensada_tarifa_unitaria")
+  energiaCompensadavalorTotal     String      @map("energia_compensada_valor_total")
+  energiaEletricaquantidade       String      @map("energia_eletrica_quantidade")
+  energiaEletricaprecoUnitario    String      @map("energia_eletrica_preco_unitario")
+  energiaEletricatarifaUnitaria   String      @map("energia_eletrica_tarifa_unitaria")
+  energiaEletricavalorTotal       String      @map("energia_eletrica_valor_total")
+  energiaSCEEquantidade           String      @map("energia_scee_quantidade")
+  energiaSCEEprecoUnitario        String      @map("energia_scee_preco_unitario")
+  energiaSCEEtarifaUnitaria       String      @map("energia_scee_tarifa_unitaria")
+  energiaSCEEvalorTotal           String      @map("energia_scee_valor_total")
+  bairro                          String
+  cep                             String
+  cidade                          String
+  complemento                     String?
+  estado                          String
+  numero                          String?
+  rua                             String
+  faturaReferenteA                String      @map("fatura_referente_a")
+  linkParaConsulta                String      @map("link_para_consulta")
+  nomeDoCliente                   String      @map("nome_do_cliente")
+  numeroDaInstalacao              String      @map("numero_da_instalacao")
+  numeroDaNotaNF                  String      @unique @map("numero_da_nota_nf")
+  numeroDoCliente                 String      @map("numero_do_cliente")
+  awsStorageObjectKey             String?     @map("aws_storage_object_key")
+  valorTotalDaFatura              String      @map("valor_total_da_fatura")
+  cliente                         Cliente?    @relation(fields: [clienteId], references: [id])
+  clienteId                       Int?        @map("cliente_id")
+  endereco                        Endereco?   @relation(fields: [enderecoId], references: [id])
+  enderecoId                      Int?        @map("endereco_id")
+  instalacao                      Instalacao? @relation(fields: [instalacaoId], references: [id])
+  instalacaoId                    Int?        @map("instalacao_id")
 
   @@map("faturas")
 }
