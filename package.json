@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsup src --out-dir build",
     "dev": "tsx watch src/server.ts",
-    "migrate": "npx prisma migrate dev",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy",
     "start": "node build/server.js",
     "test": "vitest run",
     "test:watch": "vitest"
