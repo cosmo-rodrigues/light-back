@@ -22,5 +22,8 @@ app.setErrorHandler((error: FastifyError, _request, reply: FastifyReply) => {
     return reply.status(statusCode).send({ message: message });
   }
 
+  console.log('#########################');
+  console.log(error);
+  console.log('#########################');
   return reply.status(500).send({ message: 'Erro interno dos servidor' });
 });
