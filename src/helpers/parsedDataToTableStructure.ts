@@ -67,14 +67,14 @@ export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
     datasDeLeituraProxima: stringToDateTime(data.datasDeLeitura.proxima),
     diasUtilizando: stringToInteger(data.diasUtilizando),
     energiaCompensadaQuantidade:
-      stringToInteger(data.energiaCompensadaGDIEmKWh.quantidade) || 0,
+      stringToFloat(data.energiaCompensadaGDIEmKWh.quantidade) || 0,
     energiaCompensadaPrecoUnitario:
       stringToFloat(data.energiaCompensadaGDIEmKWh.precoUnitario) || 0,
     energiaCompensadaTarifaUnitaria:
       stringToFloat(data.energiaCompensadaGDIEmKWh.tarifaUnitaria) || 0,
     energiaCompensadaValorTotal:
       stringToFloat(data.energiaCompensadaGDIEmKWh.valorTotal) || 0,
-    energiaEletricaQuantidade: stringToInteger(
+    energiaEletricaQuantidade: stringToFloat(
       data.energiaEletricaEmKWh.quantidade
     ),
     energiaEletricaPrecoUnitario: stringToFloat(
@@ -86,7 +86,7 @@ export function dataParser(data: DadosDaFatura, awsStorageObjectKey: string) {
     energiaEletricaValorTotal: stringToFloat(
       data.energiaEletricaEmKWh.valorTotal
     ),
-    energiaSCEEQuantidade: stringToInteger(
+    energiaSCEEQuantidade: stringToFloat(
       data.energiaSCEESemICMSEmKWh.quantidade
     ),
     energiaSCEEPrecoUnitario: stringToFloat(

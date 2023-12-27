@@ -1,6 +1,6 @@
 export function stringToFloat(str: string) {
   const replaceCommaWithDot = str.replace(/,/g, '.');
-  const parsed = parseFloat(replaceCommaWithDot).toFixed(10);
+  const parsed = parseFloat(replaceCommaWithDot);
   return Number(parsed);
 }
 
