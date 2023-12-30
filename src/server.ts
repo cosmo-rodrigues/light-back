@@ -1,6 +1,11 @@
 import { app } from './app';
 import { serverEnv } from './env';
 import { prisma } from './lib/prisma';
+import cors from '@fastify/cors';
+
+app.register(cors, {
+  origin: '*',
+});
 
 app
   .listen({
