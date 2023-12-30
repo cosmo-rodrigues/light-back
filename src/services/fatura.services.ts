@@ -41,7 +41,13 @@ class FaturaServices {
     return faturasParsed;
   }
 
-  async list(numeroDoCliente: string) {
+  async listAll() {
+    const faturas = await prismaFaturaRepository.getAllRegisteredFaturas();
+
+    return faturas;
+  }
+
+  async listByUserNumber(numeroDoCliente: string) {
     const faturas = await prismaFaturaRepository.getFaturaByUserNumber(
       numeroDoCliente
     );

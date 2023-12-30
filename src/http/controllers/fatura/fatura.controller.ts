@@ -26,10 +26,23 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   }
 }
 
-export async function list(request: FastifyRequest, reply: FastifyReply) {
+export async function listAll(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const faturas = await faturaServices.listAll();
+
+    return reply.status(200).send({ faturas });
+  } catch (error) {
+    return error;
+  }
+}
+
+export async function listByUserNumber(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
   try {
     const { numeroDoCliente } = listFaturasParamsSchema.parse(request.params);
-    const faturas = await faturaServices.list(numeroDoCliente);
+    const faturas = await faturaServices.listByUserNumber(numeroDoCliente);
 
     return reply.status(200).send({ faturas });
   } catch (error) {

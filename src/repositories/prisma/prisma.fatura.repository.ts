@@ -10,6 +10,12 @@ class PrismaFaturaRepository implements FaturaRepository {
     return created;
   }
 
+  async getAllRegisteredFaturas(): Promise<FaturaCreateInput[]> {
+    const faturas = prisma.fatura.findMany();
+
+    return faturas;
+  }
+
   async getFaturaByUserNumber(
     userNumber: string
   ): Promise<FaturaCreateInput[]> {
